@@ -16,35 +16,53 @@ void clearTerminal()
 #endif
 }
 
+void outputMenu()
+{
+    std::cout << "\n+---====--Grade Menu--====---+\n";
+    std::cout << "1. List Students\n";
+    std::cout << "2. Add a student\n";
+    std::cout << "3. List Tests\n";
+    std::cout << "4. Add a test\n";
+    std::cout << "5. Edit test results\n";
+    std::cout << "6. Get info from Tests\n";
+    std::cout << "7. Clear terminal\n";
+    std::cout << "8. Quit\n";
+    std::cout << "Run function: ";
+}
+
 int main()
 {
 	std::vector<std::string> students;
     std::vector<std::map<std::string, int>> test_scores;
     std::map<std::string, int> test_names;
-    
+   
     int user_input = 0;
     
     while(true)
     {
-        std::cout << "\n+---====--Grade Menu--====---+\n";
-        std::cout << "1. List Students\n";
-        std::cout << "2. Add a student\n";
-        std::cout << "3. List Tests\n";
-        std::cout << "4. Add a test\n";
-        std::cout << "5. Edit test results\n";
-        std::cout << "6. Get info from Tests\n";
-        std::cout << "7. Clear terminal\n";
-        std::cout << "8. Quit\n";
-        std::cout << "Run function: ";
+        outputMenu();
         std::cin >> user_input;
-        
+
         switch (user_input)
         {
             case 1:
                 {
                     for(int i=0; i < students.size(); i++)
                     {
-                        std::cout << "\n" << i+1 << ": " << students[i] << "\n";
+                        if (test_scores.size() > 0)
+                        {
+                            int overall_score = 0;
+                            for (int j = 0; j < test_scores.size(); j++)
+                            {
+                                overall_score += test_scores[j][students[i]];
+                            }
+                            int average_score = overall_score / test_scores.size();
+                            std::cout << "\n" << i+1 << ": " << students[i] << ": Average Score: " << average_score << "%\n";
+                        }
+                        else
+                        {
+                            std::cout << "\n" << i+1 << ": " << students[i] << "\n"; 
+                        }
                     }
                     if (students.size() == 0)
                     {
@@ -56,7 +74,8 @@ int main()
                 {
                     std::string student_name = "";
                     std::cout << "\nEnter new Students name: ";
-                    std::cin >> student_name;
+                    std::cin.ignore();
+                    std::getline(std::cin, student_name);
                     students.push_back(student_name);
                     for (int i = 0; i < test_scores.size(); i++)
                     {
@@ -82,7 +101,8 @@ int main()
                 {
                     std::string test_name;
                     std::cout << "\nTest name to add: ";
-                    std::cin >> test_name;
+                    std::cin.ignore();
+                    std::getline(std::cin, test_name);
                     test_names.insert({test_name, test_scores.size()});
                     std::map<std::string, int> students_blank;
                     for (int i = 0; i < students.size(); i++)
@@ -113,7 +133,8 @@ int main()
                     {
                         std::cout << "Enter name of test you want to get result from: ";
                         std::string name_of_test = "";
-                        std::cin >> name_of_test;
+                        std::cin.ignore();
+                        std::getline(std::cin, name_of_test);
                         int test_num = INT_MAX;
                         for (auto test : test_names)
                         {
@@ -123,7 +144,7 @@ int main()
                             }
                         }
                         if (test_num != INT_MAX)
-                        {   
+                        {          
                             while(true)
                             {
                                 std::string test_change;
@@ -132,9 +153,8 @@ int main()
                                 {
                                     std::cout << test.first << ": : " << test.second << "%\n";
                                 }
-
                                 std::cout << "\nEnter students name to edit score or q to quit: ";
-                                std::cin >> test_change;
+                                std::getline(std::cin, test_change);;
                                 if (test_change == "q" || test_change == "quit")
                                 {
                                     break;
@@ -189,7 +209,8 @@ int main()
                     {
                         std::cout << "Enter name of test you want to get result from: ";
                         std::string name_of_test = "";
-                        std::cin >> name_of_test;
+                        std::cin.ignore();
+                        std::getline(std::cin, name_of_test);
                         int test_num = INT_MAX;
                         for (auto test : test_names)
                         {
