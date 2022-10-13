@@ -30,6 +30,7 @@ void outputMenu()
     std::cout << "Run function: ";
 }
 
+/*
 void readFromFile()
 {
     //This will be reading from from the file
@@ -42,6 +43,7 @@ void readFromFile()
     }
     file.close();
 }
+*/
 
 void writeToFile()
 {
@@ -51,9 +53,8 @@ void writeToFile()
 
 int main()
 {
-	std::vector<std::string> students;
-    std::vector<std::map<std::string, int>> test_scores;
-    std::map<std::string, int> test_names;
+    std::map<std::string, std::map<std::string, int>> student_data;
+    std::vector<std::string> tests;
    
     int user_input = 0;
     
@@ -65,206 +66,205 @@ int main()
         switch (user_input)
         {
             case 1:
+            {
+                int count = 0;
+                for(auto student : student_data)
                 {
-                    for(int i=0; i < students.size(); i++)
+                    std::cout << count+1 << ": " << student.first;
+                    if (student.second.size() > 0)
                     {
-                        if (test_scores.size() > 0)
-                        {
-                            int overall_score = 0;
-                            for (int j = 0; j < test_scores.size(); j++)
-                            {
-                                overall_score += test_scores[j][students[i]];
-                            }
-                            int average_score = overall_score / test_scores.size();
-                            std::cout << "\n" << i+1 << ": " << students[i] << ": Average Score: " << average_score << "%\n";
-                        }
-                        else
-                        {
-                            std::cout << "\n" << i+1 << ": " << students[i] << "\n"; 
-                        }
-                    }
-                    if (students.size() == 0)
-                    {
-                        std::cout << "\nThere are no students initialized yet\n";
-                    }
-                    break;
-                }
-            case 2:
-                {
-                    std::string student_name = "";
-                    std::cout << "\nEnter new Students name: ";
-                    std::cin.ignore();
-                    std::getline(std::cin, student_name);
-                    students.push_back(student_name);
-                    for (int i = 0; i < test_scores.size(); i++)
-                    {
-                        test_scores[i].insert({student_name, 0});
-                    }
-                    break;
-                }
-            case 3:
-                {
-                    int count = 0;
-                    for (auto test : test_names)
-                    {
-                        count += 1;
-                        std::cout << "\n" << count << ": " << test.first;
-                    }
-                    if (count == 0)
-                    {
-                        std::cout << "\nThere are no tests initialized yet\n";
-                    }
-                    break;
-                }
-            case 4:
-                {
-                    std::string test_name;
-                    std::cout << "\nTest name to add: ";
-                    std::cin.ignore();
-                    std::getline(std::cin, test_name);
-                    test_names.insert({test_name, test_scores.size()});
-                    std::map<std::string, int> students_blank;
-                    for (int i = 0; i < students.size(); i++)
-                    {
-                        students_blank.insert({students[i], 0});
-                    }
-                    test_scores.push_back(students_blank);
-                    break;
-                }
-            case 5:
-                {
-                    if(test_scores.size() == 0)
-                    {
-                        std::cout << "\nThere are no tests initialized yet\n";
-                        break;
-                    }
-                    if(students.size() == 0)
-                    {
-                        std::cout << "\nThere are no students initialized yet\n";
-                        break;
-                    }
-                    std::cout << "\n__Test Names__\n";
-                    for (auto test : test_names)
-                    {
-                        std::cout << test.first << "\n";
-                    }
-                    while (true)
-                    {
-                        std::cout << "Enter name of test you want to get result from: ";
-                        std::string name_of_test = "";
-                        std::cin.ignore();
-                        std::getline(std::cin, name_of_test);
-                        int test_num = INT_MAX;
-                        for (auto test : test_names)
-                        {
-                            if(name_of_test == test.first)
-                            {
-                                test_num = test.second;
-                            }
-                        }
-                        if (test_num != INT_MAX)
-                        {          
-                            while(true)
-                            {
-                                std::string test_change;
-                                std::cout << "\n";
-                                for (auto test : test_scores[test_num])
-                                {
-                                    std::cout << test.first << ": : " << test.second << "%\n";
-                                }
-                                std::cout << "\nEnter students name to edit score or q to quit: ";
-                                std::getline(std::cin, test_change);;
-                                if (test_change == "q" || test_change == "quit")
-                                {
-                                    break;
-                                }
-                                else 
-                                {
-                                    bool valid_student = false;
-                                    for (auto student : test_scores[test_num])
-                                    {
-                                        if (test_change == student.first)
-                                        {
-                                            int score = 0;
-                                            std::cout << "\nWhat is their score: ";
-                                            std::cin >> score;
-                                            test_scores[test_num][test_change] = score;
-                                            valid_student=true;
-                                        }
-                                    }
-                                    if (valid_student == false)
-                                    {
-                                        std::cout << "\nThat is not a valid student\n";
-                                    }
-                                }
-                           }
-                        }
-                        else
-                        {
-                            std::cout << "\nThat test does not exist ... please re-enter\n";
-                        }
-                        break;
-                    }
-                    break;
-                }
-            case 6:
-                {
-                    if(test_scores.size() == 0)
-                    {
-                        std::cout << "\nThere are no tests initialized yet\n";
-                        break;
-                    }
-                    if(students.size() == 0)
-                    {
-                        std::cout << "\nThere are no students initialized yet\n";
-                        break;
-                    }
-                    std::cout << "\n__Test Names__\n";
-                    for (auto test : test_names)
-                    {
-                        std::cout << test.first << "\n";
-                    }
-                    while (true)
-                    {
-                        std::cout << "Enter name of test you want to get result from: ";
-                        std::string name_of_test = "";
-                        std::cin.ignore();
-                        std::getline(std::cin, name_of_test);
-                        int test_num = INT_MAX;
-                        for (auto test : test_names)
-                        {
-                            if(name_of_test == test.first)
-                            {
-                                test_num = test.second;
-                            }
-                        }
-                        if (test_num != INT_MAX)
-                        {
-                            std::cout << "\n";
-                            for (auto test : test_scores[test_num])
-                            {
-                                std::cout << test.first << ": : " << test.second << "%\n";
-                            }
-                        }
-                        else
-                        {
-                            std::cout << "\nThat test does not exist ... please re-enter\n";
-                        }
-                        break;
-                    }
-                    break;
-                }
-            case 7:
-                {
-                    clearTerminal();
-                    break;
-                }
-            case 8:
-                {
-                    clearTerminal();                    
-                    exit(0);
-                }
-        }
+                        float average_score = 0;
+                        int total_score = 0;
 
+                        for (auto test : student.second)
+                        {
+                            total_score += test.second;
+                        }
+                        average_score = total_score / student.second.size();
+                        std:: cout << ": Average score: " << average_score << "%";
+                    }
+                    std::cout << "\n";
+                }
+                break;
+            }
+            case 2:
+            {
+                std::string student_name = "";
+                std::cout << "\nEnter new Students name: ";
+                std::cin.ignore();
+                std::getline(std::cin, student_name);
+                std::map<std::string, int> test_data;
+                if (tests.size() > 0)
+                {
+                    for (int i = 0; i < tests.size(); i++)
+                    {
+                        test_data.insert({tests[i], 0});
+                    }
+                }
+                student_data.insert({student_name, test_data});
+                break;
+            }
+            case 3:
+            {
+                int count = 0;
+                for (auto test : tests)
+                {
+                    count += 1;
+                    std::cout << "\n" << count << ": " << test;
+                }
+                if (count == 0)
+                {
+                    std::cout << "\nThere are no tests initialized yet\n";
+                }
+                break;
+            }
+            case 4:
+            {
+                std::string test_name;
+                std::cout << "\nTest name to add: ";
+                std::cin.ignore();
+                std::getline(std::cin, test_name);
+                tests.push_back(test_name);
+                for (auto student:student_data)
+                {
+                    student.second.insert({test_name, 0});
+                }
+                break;
+            }
+            case 5:
+            { 
+                if(tests.size() == 0)
+                {
+                    std::cout << "\nThere are no tests initialized yet\n";
+                    break;
+                }
+                if(student_data.size() == 0)
+                {
+                    std::cout << "\nThere are no students initialized yet\n";
+                    break;
+                }
+                std::cout << "\n__Test Names__\n";
+                for (auto test : tests)
+                {
+                    std::cout << test << "\n";
+                }
+                while (true)
+                {
+                    std::cout << "Enter name of test you want to get result from: ";
+                    std::string name_of_test = "";
+                    std::cin.ignore();
+                    std::getline(std::cin, name_of_test);
+                    bool test_found = false;
+                    for (auto test : tests)
+                    {
+                        if(name_of_test == test)
+                        {
+                            test_found = true;
+                        }
+                    }
+                    if (test_found == true)
+                    {          
+                        while(true)
+                        {
+                            std::string test_change;
+                            std::cout << "\n";
+                            for (auto student : student_data)
+                            {
+                                std::cout << student.first << ": : " << student.second[name_of_test] << "%\n";
+                            }
+                            std::cout << "\nEnter students name to edit score or q to quit: ";
+                            std::getline(std::cin, test_change);
+                            if (test_change == "q" || test_change == "quit")
+                            {
+                                break;
+                            }
+                            else 
+                            {
+                                bool valid_student = false;
+                                for (auto student : student_data)
+                                {
+                                    if (test_change == student.first)
+                                    {
+                                        valid_student=true;
+                                    }
+                                }
+                                if (valid_student == false)
+                                {
+                                    std::cout << "\nThat is not a valid student\n";
+                                }
+                                else
+                                {
+                                    std::cout << "What was " << test_change << "'s score: ";
+                                    std::cin >> student_data[test_change][name_of_test];
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        std::cout << "\nThat test does not exist ... please re-enter\n";
+                    }
+                    break;
+                }
+                break;
+            }
+            case 6:
+            {
+                if(tests.size() == 0)
+                {
+                    std::cout << "\nThere are no tests initialized yet\n";
+                    break;
+                }
+                if(student_data.size() == 0)
+                {
+                    std::cout << "\nThere are no students initialized yet\n";
+                    break;
+                }
+                std::cout << "\n__Test Names__\n";
+                for (auto test : tests)
+                {
+                    std::cout << test << "\n";
+                }
+                while (true)
+                {
+                    std::cout << "Enter name of test you want to get result from: ";
+                    std::string name_of_test = "";
+                    std::cin.ignore();
+                    std::getline(std::cin, name_of_test);
+                    bool found_test = false;
+                    for (auto test : tests)
+                    {
+                        if(name_of_test == test)
+                        {
+                            found_test = true;
+                        }
+                    }
+                    if (found_test == true)
+                    {
+                        std::cout << "\n";
+                        for (auto student : student_data)
+                        {
+                            std::cout << student.first << ": : " << student.second[name_of_test] << "%\n";
+                        }
+                    }
+                    else
+                    {
+                        std::cout << "\nThat test does not exist ... please re-enter\n";
+                    }
+                    break;
+                }
+                break;
+            }
+            case 7:
+            {
+                clearTerminal();
+                break;
+            }
+            case 8:
+            {
+                clearTerminal();                    
+                exit(0);
+            }
+        }
     }
 }
