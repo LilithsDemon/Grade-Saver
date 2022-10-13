@@ -30,6 +30,25 @@ void outputMenu()
     std::cout << "Run function: ";
 }
 
+void readFromFile()
+{
+    //This will be reading from from the file
+    std::ifstream file("data.grades");
+    std::vector<std::string> student_data;
+    std::string currentText;
+    while (getline(file, currentText))
+    {
+        student_data.pushback(currentText);
+    }
+    file.close();
+}
+
+void writeToFile()
+{
+    //This will be exporting to file
+}
+
+
 int main()
 {
 	std::vector<std::string> students;
