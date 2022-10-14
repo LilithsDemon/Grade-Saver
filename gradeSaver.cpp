@@ -242,10 +242,25 @@ int main()
                     if (found_test == true)
                     {
                         std::cout << "\n";
+                        int total_score = 0;
+                        int best_score = 0;
+                        int worst_score = 100;
                         for (auto student : student_data)
                         {
                             std::cout << student.first << ": : " << student.second[name_of_test] << "%\n";
+                            total_score += student.second[name_of_test];
+                            if (student.second[name_of_test] > best_score)
+                            {
+                                best_score = student.second[name_of_test];
+                            }
+                            if (student.second[name_of_test] < worst_score)
+                            {
+                                worst_score = student.second[name_of_test];
+                            }
                         }
+                        std::cout << "\nAverage Score is " << total_score/student_data.size() << "%";
+                        std::cout << "\nTop Score is " << best_score << "%";
+                        std::cout << "\nWort Score is " << worst_score << "%";
                     }
                     else
                     {
