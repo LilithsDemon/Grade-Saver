@@ -45,9 +45,23 @@ void readFromFile()
 }
 */
 
-void writeToFile()
+void writeToFile(std::map<std::string, std::map<std::string, int>> &student_data)
 {
-    //This will be exporting to file
+    std::string text_to_save = "";
+    std::ofstream file("data.grades");
+    
+    for(auto student : student_data)
+    {
+        text_to_save += "Name: " + student.first + ", ";
+        for(auto test : student.second)
+        {  
+            text_to_save += test.first + ": " + std::to_string(test.second) + ", ";
+        }
+        text_to_save += "\n";
+    }
+
+    file << text_to_save;
+    file.close();
 }
 
 
@@ -195,8 +209,9 @@ int main()
                                 else
                                 {
                                     std::cout << "What was " << test_change << "'s score: ";
-                                    std::cin >> student_data[test_change][name_of_test];
-                                }
+                                    std::string new_val = "0";
+                                    std::getline(std::cin, new_val);
+                                    student_data[test_change][name_of_test] = stoi(new_val);                               }
                             }
                         }
                     }
@@ -277,7 +292,8 @@ int main()
             }
             case 8:
             {
-                clearTerminal();                    
+                clearTerminal(); 
+                writeToFile(student_data);
                 exit(0);
             }
         }
