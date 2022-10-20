@@ -30,20 +30,49 @@ void outputMenu()
     std::cout << "Run function: ";
 }
 
-/*
-void readFromFile()
+std::vector<std::string> splitText(std::string command, std::string seperator)
 {
-    //This will be reading from from the file
-    std::ifstream file("data.grades");
-    std::vector<std::string> student_data;
-    std::string currentText;
-    while (getline(file, currentText))
+    std::vector<std::string> commands;
+    int last_stop = 0;
+    std::string current_text = "";
+    int current_command = 0;
+
+    for (int i = 0; i < (command.length() - seperator.length()); i++)
     {
-        student_data.pushback(currentText);
+        current_text = command.substr(i, seperator.length());
+        if(current_text == seperator)
+        {
+            commands.push_back(command.substr(last_stop, i - last_stop));
+            current_command++;
+            last_stop = i+seperator.length();
+        }
+    }
+    commands.push_back(command.substr(last_stop));
+    if (commands.size() == 0)
+    {
+        commands.push_back(command);
+    }
+    
+    return commands;
+}
+
+void readFromFile(std::map<std::string, std::map<std::string, int>> &student_data, std::vector<std::string> &tests)
+{
+    std::ifstream file("data.grades");
+    std::vector<std::string> students;
+    std::string current_text;
+    while (getline(file, current_text))
+    {
+        students.push_back(current_text);
+    }
+    std::vector<std::string> test_data;
+    for (auto student : students)
+    {
+        test_data.push_back(splitText(student, ","));
+        //Ad exporting rest of data here
     }
     file.close();
 }
-*/
 
 void writeToFile(std::map<std::string, std::map<std::string, int>> &student_data)
 {
@@ -52,10 +81,10 @@ void writeToFile(std::map<std::string, std::map<std::string, int>> &student_data
     
     for(auto student : student_data)
     {
-        text_to_save += "Name: " + student.first + ", ";
+        text_to_save += student.first + ", ";
         for(auto test : student.second)
         {  
-            text_to_save += test.first + ": " + std::to_string(test.second) + ", ";
+            text_to_save += test.first + ":" + std::to_string(test.second) + ",";
         }
         text_to_save += "\n";
     }
