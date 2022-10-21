@@ -65,11 +65,27 @@ void readFromFile(std::map<std::string, std::map<std::string, int>> &student_dat
     {
         students.push_back(current_text);
     }
-    std::vector<std::string> test_data;
-    for (auto student : students)
+    std::vector<std::vector<std::string>> file_lines;
+    std::vector<std::string> broken_down_student;
+    for (int i = 0; i < students.size(); i++) 
     {
-        test_data.push_back(splitText(student, ","));
-        //Ad exporting rest of data here
+        broken_down_student = splitText(students[i], ",");
+        file_lines.push_back(broken_down_student);
+    }
+    std::map<std::string, int> test_data;
+    for (int i = 0; i < file_lines.size(); i++)
+    {
+        for(int j = 1;  j < file_lines[0].size(); j++)
+        {
+            if(file_lines[i][j] != "")
+            {
+                
+                test_data.insert({splitText(file_lines[i][j], ":")[0], std::stoi(splitText(file_lines[i][j], ":")[1])});
+                if (i == 0) {tests.push_back(splitText(file_lines[i][j], ":")[0]);}
+            }
+            student_data.insert({file_lines[i][0], test_data});
+            test_data.clear();
+        }
     }
     file.close();
 }
@@ -81,7 +97,7 @@ void writeToFile(std::map<std::string, std::map<std::string, int>> &student_data
     
     for(auto student : student_data)
     {
-        text_to_save += student.first + ", ";
+        text_to_save += student.first + ",";
         for(auto test : student.second)
         {  
             text_to_save += test.first + ":" + std::to_string(test.second) + ",";
@@ -98,7 +114,8 @@ int main()
 {
     std::map<std::string, std::map<std::string, int>> student_data;
     std::vector<std::string> tests;
-   
+    readFromFile(student_data, tests);
+
     int user_input = 0;
     
     while(true)
@@ -126,6 +143,7 @@ int main()
                         average_score = total_score / student.second.size();
                         std:: cout << ": Average score: " << average_score << "%";
                     }
+                    count++;
                     std::cout << "\n";
                 }
                 break;
